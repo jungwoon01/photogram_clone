@@ -14,6 +14,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 시큐리�
         // 기존의 시큐리티 설정들을 주석처리로 비활성화 시킨다.
         // super.configure(http);
 
+        http.csrf().disable(); // csrf 토큰 검사를 하지 않겠다
+
         http.authorizeRequests()
                 // antMatchers()에 지정된 url 은 인증이 필요하고
                 .antMatchers("/", "/user/**", "/image/**", "/subscribe/**", "/comment/**").authenticated()
