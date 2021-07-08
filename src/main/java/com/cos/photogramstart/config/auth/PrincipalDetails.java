@@ -31,6 +31,10 @@ public class PrincipalDetails implements UserDetails {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();
