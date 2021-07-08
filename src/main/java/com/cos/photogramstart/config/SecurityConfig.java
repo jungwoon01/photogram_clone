@@ -33,8 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 시큐리�
                 .and()
                 // 인증이 필요한 페이지 요청이 오면 formLogin() 을 하는데
                 .formLogin()
-                // 로그인 페이지는 /auth/signin 이고
+                // 로그인 페이지는 /auth/signin 이고 (get 방식)
                 .loginPage("/auth/signin")
+                // post 방식의 요청
+                .loginProcessingUrl("/auth/signin")
                 // 로그인 성공하면 / 로 이동한다.
                 .defaultSuccessUrl("/");
     }
