@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @ControllerAdvice // 모든 예외를 낚아 챈다.
 public class ControllerExceptionHandler {
@@ -28,6 +26,9 @@ public class ControllerExceptionHandler {
     // CustomValidationException 이 발생하면 아래의 메서드가 실행된다.
     @ExceptionHandler(CustomValidationException.class)
     public ResponseEntity<?> validationException(CustomValidationException e) { // '?' : 제네릭 타입 리턴 타입을 추론 할 수 있다.
+        if(e.getErrorMap() == null) {
+            return new ResponseEntity<> (Script.back(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<> (Script.back(e.getErrorMap().toString()), HttpStatus.BAD_REQUEST);
     }
 

@@ -1,6 +1,7 @@
 package com.cos.photogramstart.service;
 
 import com.cos.photogramstart.config.auth.PrincipalDetails;
+import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.domain.image.ImageRepository;
 import com.cos.photogramstart.web.dto.image.ImageUploadDto;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +29,15 @@ public class ImageService {
 
         Path imageFilePath = Paths.get(uploadFolder+imageFileName);
 
-        // 통신, I/O -> 예외가 발생할 수 있다.
+        // 이미지 파일 저장
         try {
             Files.write(imageFilePath, imageUploadDto.getFile().getBytes());
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // 이미지 경로 테이블에 저장
+        Image image = imageUploadDto.toEntity(imageFileName, principalDetails.getUser());
+        Image imageEntity = imageRepository.save(image);
     }
 }
