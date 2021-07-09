@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 시큐리�
 
         http.authorizeRequests()
                 // antMatchers()에 지정된 url 은 인증이 필요하고
-                .antMatchers("/", "/user/**", "/image/**", "/subscribe/**", "/comment/**").authenticated()
+                .antMatchers("/", "/user/**", "/image/**", "/subscribe/**", "/comment/**", "/api/**").authenticated()
                 // 나머지는 모두 접근 가능하게 설정
                 .anyRequest().permitAll()
                 // 그리고
