@@ -1,6 +1,7 @@
 package com.cos.photogramstart.handler;
 
 import com.cos.photogramstart.handler.ex.CustomApiException;
+import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.handler.ex.CustomValidationApiException;
 import com.cos.photogramstart.handler.ex.CustomValidationException;
 import com.cos.photogramstart.util.Script;
@@ -30,6 +31,13 @@ public class ControllerExceptionHandler {
             return new ResponseEntity<> (Script.back(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<> (Script.back(e.getErrorMap().toString()), HttpStatus.BAD_REQUEST);
+    }
+
+    // Script 방식
+    // CustomException 이 발생하면 아래의 메서드가 실행된다.
+    @ExceptionHandler(CustomException.class)
+    public String exception(CustomException e) { // '?' : 제네릭 타입 리턴 타입을 추론 할 수 있다.
+        return Script.back(e.getMessage());
     }
 
     // CMRespDto 방식
