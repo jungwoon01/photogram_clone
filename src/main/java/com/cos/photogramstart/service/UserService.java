@@ -4,6 +4,7 @@ import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.domain.user.UserRepository;
 import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.handler.ex.CustomValidationException;
+import com.cos.photogramstart.web.dto.user.UserProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User userProfile(int userId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> {
+    @Transactional(readOnly = true)
+    public UserProfileDto userProfile(int pageUserId, int principalID) {
+        UserProfileDto dto = new UserProfileDto();
+
+        User userEntity = userRepository.findById(pageUserId).orElseThrow(() -> {
             throw new CustomException("해당 프로필 페이지는 없는 페이지 입니다.");
         });
-        return userEntity;
+
+        dto.setUser(userEntity);
+        dto.setPageOwnerState(pageUserId == principalID); // 1 페이지 주인, -1은 주인 아님
+        dto.setImageCount(userEntity.getImages().size()); // 게시물 수
+
+        return dto;
     }
 
     @Transactional

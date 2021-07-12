@@ -3,6 +3,7 @@ package com.cos.photogramstart.web;
 import com.cos.photogramstart.config.auth.PrincipalDetails;
 import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.service.UserService;
+import com.cos.photogramstart.web.dto.user.UserProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,10 +20,10 @@ public class UserController {
     private final UserService userService;
 
     // 유저 페이지
-    @GetMapping("user/{id}")
-    public String profile(@PathVariable int id, Model model) {
-        User userEntity = userService.userProfile(id);
-        model.addAttribute("user", userEntity);
+    @GetMapping("user/{pageUserId}")
+    public String profile(@PathVariable int pageUserId, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        UserProfileDto userProfileDto = userService.userProfile(pageUserId, principalDetails.getUser().getId());
+        model.addAttribute("dto", userProfileDto);
         return "/user/profile";
     }
 
