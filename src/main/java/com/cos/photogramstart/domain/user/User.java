@@ -4,6 +4,7 @@ package com.cos.photogramstart.domain.user;
 // 자바로 데이터를 영구적으로 저장할 수 있는 API를 제공
 
 import com.cos.photogramstart.domain.image.Image;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +45,8 @@ public class User {
     // LAZY = USER 를 Select 할 때 해당 User id 로 등록된 image 들을 가져오지마 - 대신 getImages() 함수가 호출 될 때 가져와.
     // Eager = User 를 Select 할 때 해당 User id로 등록된 image 들을 전부 Join 해서 가져와!
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    // Image 내부의 user 는 json 에 파싱하지 않는다. 무한 참조 방지!
+    @JsonIgnoreProperties({"user"})
     private List<Image> images; // 양방향 매핑
 
     private LocalDateTime createDate;
@@ -51,5 +54,23 @@ public class User {
     @PrePersist
     public void createdDate() {
         this.createDate = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", website='" + website + '\'' +
+                ", bio='" + bio + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", gender='" + gender + '\'' +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", role='" + role + '\'' +
+                ", createDate=" + createDate +
+                '}';
     }
 }
