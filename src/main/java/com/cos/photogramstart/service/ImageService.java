@@ -6,6 +6,8 @@ import com.cos.photogramstart.domain.image.ImageRepository;
 import com.cos.photogramstart.web.dto.image.ImageUploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +43,12 @@ public class ImageService {
         // 이미지 경로 테이블에 저장
         Image image = imageUploadDto.toEntity(imageFileName, principalDetails.getUser());
         imageRepository.save(image);
+    }
+
+    // 스토리 이미지 불러오는 서비스
+    @Transactional(readOnly = true) // @Transaction 세션을 컨트롤러까지 끌고감
+    public Page<Image> imageStory(int principalId, Pageable pageable) {
+        Page<Image> images = imageRepository.mStory(principalId, pageable);
+        return images;
     }
 }
