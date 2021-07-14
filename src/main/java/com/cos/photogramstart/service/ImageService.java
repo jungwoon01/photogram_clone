@@ -49,6 +49,18 @@ public class ImageService {
     @Transactional(readOnly = true) // @Transaction 세션을 컨트롤러까지 끌고감
     public Page<Image> imageStory(int principalId, Pageable pageable) {
         Page<Image> images = imageRepository.mStory(principalId, pageable);
+
+        images.forEach((image) -> {
+
+            image.setLikeCount(image.getLikes().size()); // 좋아요 수 저장
+
+            image.getLikes().forEach((like) -> {
+                if(like.getUser().getId() == principalId) { // 해당 이미지에 좋아요한 사람들을 찾아서 현재 로그인한 사람이 좋아요 한것인지 비교
+                    image.setLikeState(true);
+                }
+            });
+        });
+
         return images;
     }
 }

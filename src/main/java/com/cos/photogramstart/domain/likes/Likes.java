@@ -1,5 +1,6 @@
-package com.cos.photogramstart.domain.subscribe;
+package com.cos.photogramstart.domain.likes;
 
+import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,29 +18,26 @@ import java.time.LocalDateTime;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "subscribe_uk",
-                        columnNames = {"fromUserId", "toUserId"}
+                        name = "likes_uk",
+                        columnNames = {"imageId", "userId"}
                 )
         }
 )
-public class Subscribe {
+public class Likes {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JoinColumn(name = "fromUserId")
+    @JoinColumn(name = "imageId")
     @ManyToOne
-    private User fromUser;
+    private Image image;
 
-    @JoinColumn(name = "toUserId")
+    // 오류가 터지고 @JsonIgnoreProperties() 를 추가할 것이다.
+    @JoinColumn(name = "userId")
     @ManyToOne
-    private User toUser;
+    private User user;
 
     private LocalDateTime createDate;
 
-    // 생성 시간 자동 저장
-    @PrePersist
-    public void createDate() {
-        this.createDate = LocalDateTime.now();
-    }
 }

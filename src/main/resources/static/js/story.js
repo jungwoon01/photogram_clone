@@ -29,6 +29,7 @@ function storyLoad() {
 
 storyLoad();
 
+// 이미지 템플릿 리턴
 function getStoryItem(image) {
 	let item = `
 		<div class="story-list__item">
@@ -46,12 +47,19 @@ function getStoryItem(image) {
 			<div class="sl__item__contents">
 				<div class="sl__item__contents__icon">
 				
-					<button>
-						<i class="fas fa-heart active" id="storyLikeIcon-1" onclick="toggleLike()"></i>
+					<button>`;
+
+	if(image.likeState) {
+		item += `<i class="fas fa-heart active" id="storyLikeIcon-${image.id}" onclick="toggleLike(${image.id})"></i>`;
+	} else {
+		item += `<i class="far fa-heart" id="storyLikeIcon-${image.id}" onclick="toggleLike(${image.id})"></i>`;
+	}
+
+	item += `
 					</button>
 				</div>
 			
-				<span class="like"><b id="storyLikeCount-1">3 </b>likes</span>
+				<span class="like"><b id="storyLikeCount-${image.id}">${image.likeCount} </b>likes</span>
 			
 				<div class="sl__item__contents__content">
 					<p>${image.caption}</p>
@@ -99,17 +107,49 @@ $(window).scroll(() => {
 });
 
 
-// (3) 좋아요, 안좋아요
-function toggleLike() {
-	let likeIcon = $("#storyLikeIcon-1");
+// (3) 좋아요, 좋아요 취소
+function toggleLike(imageId) {
+	let likeIcon = $(`#storyLikeIcon-${imageId}`);
 	if (likeIcon.hasClass("far")) {
-		likeIcon.addClass("fas");
-		likeIcon.addClass("active");
-		likeIcon.removeClass("far");
+
+		$.ajax({
+			type: "post",
+			url: `/api/image/${imageId}/likes`,
+			dataType: "json"
+		}).done(res=>{
+
+			// 좋아요 개수 1 증가
+			let likeCountStr = $(`#storyLikeCount-${imageId}`).text();
+			let likeCountNum = Number(likeCountStr) + 1;
+			$(`#storyLikeCount-${imageId}`).text(likeCountNum);
+
+			// 좋아요 빨간 하트로 변경
+			likeIcon.addClass("fas");
+			likeIcon.addClass("active");
+			likeIcon.removeClass("far");
+		}).fail(error=>{
+			console.log("좋아요 실패", error);
+		});
 	} else {
-		likeIcon.removeClass("fas");
-		likeIcon.removeClass("active");
-		likeIcon.addClass("far");
+		$.ajax({
+			type: "delete",
+			url: `/api/image/${imageId}/likes`,
+			dataType: "json"
+		}).done(res=>{
+
+			// 좋아요 개수 1 감소
+			let likeCountStr = $(`#storyLikeCount-${imageId}`).text();
+			let likeCountNum = Number(likeCountStr) - 1;
+			$(`#storyLikeCount-${imageId}`).text(likeCountNum);
+
+			// 좋아요 검은 테두리 하트로 변경
+			likeIcon.removeClass("fas");
+			likeIcon.removeClass("active");
+			likeIcon.addClass("far");
+		}).fail(error=>{
+			console.log("좋아요 취소 실패", error);
+		});
+
 	}
 }
 
