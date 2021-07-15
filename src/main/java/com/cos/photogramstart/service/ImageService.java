@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -62,5 +63,10 @@ public class ImageService {
         });
 
         return images;
+    }
+
+    // 인기 이미지 불러오는 서비스
+    public List<Image> popularImage() {
+        return imageRepository.mPopular();
     }
 }
