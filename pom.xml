@@ -19,6 +19,13 @@
 	</properties>
 	<dependencies>
 
+		<!-- aop 라이브러리 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>2.4.5</version>
+		</dependency>
+
 		<!-- qlrm -->
 		<dependency>
 			<groupId>org.qlrm</groupId>

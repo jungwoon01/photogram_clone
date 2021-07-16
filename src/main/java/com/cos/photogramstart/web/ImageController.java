@@ -43,7 +43,7 @@ public class ImageController {
 
     @PostMapping("/image")
     public String imageUpload(ImageUploadDto imageUploadDto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-
+        // aop 로 처리하기에는 공통적인 부분이 없다.
         if(imageUploadDto.getFile().isEmpty()) {
             throw new CustomValidationException("이미지가 첨부 되지 않았습니다.", null);
         }

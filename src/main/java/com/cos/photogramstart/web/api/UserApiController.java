@@ -37,18 +37,10 @@ public class UserApiController {
     public CMRespDto<?> update(@PathVariable int id, @Valid UserUpdateDto userUpdateDto,
                                BindingResult bindingResult, @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        if(bindingResult.hasErrors()) { // 유효성 검사 오류가 있으면
-            Map<String, String> errorMap = new HashMap<>();
+        User userEntity = userService.updateUserInfo(id, userUpdateDto.toEntity());
+        principalDetails.setUser(userEntity); // 세션 정보 변경
+        return new CMRespDto<>(1, "회원 수정 완료", userEntity);
 
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationApiException("유효성 검사 실패", errorMap);
-        }else {
-            User userEntity = userService.updateUserInfo(id, userUpdateDto.toEntity());
-            principalDetails.setUser(userEntity); // 세션 정보 변경
-            return new CMRespDto<>(1, "회원 수정 완료", userEntity);
-        }
     }
 
     @GetMapping("/api/user/{pageUserId}/subscribe")

@@ -30,15 +30,6 @@ public class CommentApiController {
     public ResponseEntity<?> commentSave(@Valid @RequestBody CommentDto commentDto, BindingResult bindingResult,
                                          @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        if(bindingResult.hasErrors()) { // 유효성 검사 오류가 있으면 예외 발생
-            Map<String, String> errorMap = new HashMap<>();
-
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationApiException("유효성 검사 실패", errorMap);
-        }
-
         Comment commentEntity = commentService.writeComment(commentDto.getContent(), commentDto.getImageId(), principalDetails.getUser().getId());
 
         return new ResponseEntity<>(new CMRespDto<>(1, "댓글 쓰기 성공", commentEntity), HttpStatus.CREATED);
