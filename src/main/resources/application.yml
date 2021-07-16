@@ -34,7 +34,14 @@ spring:
   security:
     user:
       name: test
-      password: 1234   
+      password: 1234
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 클라이언트 아이디
+            client-secret: 클라이언트 시크릿
+            scope: public_profile,email
 
 file:
   path: C:/Study/Spring/photogram_clone/upload/
